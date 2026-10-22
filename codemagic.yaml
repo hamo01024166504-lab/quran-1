@@ -1,0 +1,19 @@
+workflows:
+  flutter-apk-build:
+    name: Build Flutter APK
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+    scripts:
+      - name: Set up project & Build
+        script: |
+          mkdir -p lib
+          mv *.dart lib/ 2>/dev/null || true
+          if [ ! -d "android" ]; then
+            flutter create . --platforms=android --org com.quran.maker
+          fi
+          flutter pub get
+          flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
